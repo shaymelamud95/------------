@@ -158,3 +158,29 @@ Resources:
     Properties:
       SubnetId: !Ref mySubnet2
       RouteTableId: !Ref myPublicRouteTable
+
+
+Outputs:
+  Subnet1:
+    Description: "The ID of the first subnet for the ECS service"
+    Value: !Ref mySubnet1
+    Export:
+      Name: !Sub "${Prefix}-Subnet1"
+
+  Subnet2:
+    Description: "The ID of the second subnet for the ECS service"
+    Value: !Ref mySubnet2
+    Export:
+      Name: !Sub "${Prefix}-Subnet2"
+
+  myECSSecurityGroup:
+    Description: "The security group ID for ECS tasks"
+    Value: !Ref myECSSecurityGroup
+    Export:
+      Name: !Sub "${Prefix}-ECSSecurityGroup"
+
+  TargetGroupArn:
+    Description: "The ARN of the target group associated with the ALB"
+    Value: !Ref myTargetGroup
+    Export:
+      Name: !Sub "${Prefix}-TargetGroupArn"

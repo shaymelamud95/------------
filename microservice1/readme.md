@@ -135,7 +135,7 @@ Execution:
 
 bash
 Copy code
-aws cloudformation create-stack --stack-name ${PREFIX}-ecs-tasks-stack --template-body file://ecs_tasks.yaml --parameters ParameterKey=Prefix,ParameterValue=${PREFIX} --capabilities CAPABILITY_NAMED_IAM
+aws cloudformation create-stack --stack-name ${PREFIX}-ecs-tasks-stack --template-body file://ecs_tasks.yaml --parameters ParameterKey=Prefix,ParameterValue=${PREFIX} ParameterKey=ClusterName,ParameterValue=${PREFIX}ClusterName --capabilities CAPABILITY_NAMED_IAM
 
 Verification:
 

@@ -8,21 +8,21 @@ Parameters:
     Type: String
     Description: Name of the ECS cluster to deploy services
 
-  Subnet1:
-    Type: AWS::EC2::Subnet::Id
-    Description: ID of the first subnet for the ECS service
+  # Subnet1:
+  #   Type: AWS::EC2::Subnet::Id
+  #   Description: ID of the first subnet for the ECS service
 
-  Subnet2:
-    Type: AWS::EC2::Subnet::Id
-    Description: ID of the second subnet for the ECS service
+  # Subnet2:
+  #   Type: AWS::EC2::Subnet::Id
+  #   Description: ID of the second subnet for the ECS service
 
-  myECSSecurityGroup:
-    Type: AWS::EC2::SecurityGroup::Id
-    Description: Security group for ECS tasks
+  # myECSSecurityGroup:
+  #   Type: AWS::EC2::SecurityGroup::Id
+  #   Description: Security group for ECS tasks
 
-  myECSTaskExecutionRole:
-    Type: String
-    Description: ARN of the ECS Task Execution Role
+  # myECSTaskExecutionRole:
+  #   Type: String
+  #   Description: ARN of the ECS Task Execution Role
 
   # myS3Bucket:
   #   Type: String
@@ -32,13 +32,13 @@ Parameters:
   #   Type: String
   #   Description: URL of the SQS queue for messaging
 
-  TargetGroupArn:
-    Type: String
-    Description: ARN of the target group associated with the ALB
+  # TargetGroupArn:
+  #   Type: String
+  #   Description: ARN of the target group associated with the ALB
 
-  myECSTaskRole:
-    Type: String
-    Description: Other services like sqs permitions
+  # myECSTaskRole:
+  #   Type: String
+  #   Description: Other services like sqs permitions
 
 
 Resources:
