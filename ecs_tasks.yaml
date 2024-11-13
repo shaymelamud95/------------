@@ -103,10 +103,13 @@ Resources:
             - !ImportValue
                'Fn::Sub': "${Prefix}-Subnet2"
           SecurityGroups:
-            - !ImportValue "!Sub ${Prefix}-ECSSecurityGroup"
+            - !ImportValue
+                'Fn::Sub': "${Prefix}-ECSSecurityGroup"
           AssignPublicIp: ENABLED
       LoadBalancers:
-        - TargetGroupArn: !ImportValue "!Sub ${Prefix}-TargetGroupArn"
+        - TargetGroupArn: 
+            - !ImportValue
+                'Fn::Sub': "${Prefix}-TargetGroupArn"
           ContainerName: myMicroservice1
           ContainerPort: 80
       DeploymentConfiguration:
@@ -131,5 +134,6 @@ Resources:
             - !ImportValue
                'Fn::Sub': "${Prefix}-Subnet2"
           SecurityGroups:
-            - !ImportValue "!Sub ${Prefix}-ECSSecurityGroup"
+            - !ImportValue
+                'Fn::Sub': "${Prefix}-ECSSecurityGroup"
           AssignPublicIp: ENABLED
