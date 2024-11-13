@@ -56,7 +56,7 @@ Resources:
         'Fn::Sub': "${Prefix}-ECSTaskExecutionRole"
       ContainerDefinitions:
         - Name: myMicroservice1
-          Image: !Sub "${Microservice1ECRRepository}:1.0.0"    # Placeholder image for testing
+          Image: !Sub "!ImportValue ${Microservice1ECRRepository}:1.0.0"    # Placeholder image for testing
           Essential: true
           PortMappings:
             - ContainerPort: 80
@@ -81,7 +81,7 @@ Resources:
         'Fn::Sub': "${Prefix}-ECSTaskExecutionRole"
       ContainerDefinitions:
         - Name: myMicroservice2
-           Image: !Sub "${Microservice2ECRRepository}:1.0.0"   # Placeholder image for testing
+           Image: !Sub "!ImportValue ${Microservice2ECRRepository}:1.0.0"   # Placeholder image for testing
           Essential: true
           Environment:
             - Name: SQS_QUEUE_URL
