@@ -3,7 +3,8 @@ FROM python:3.9-slim
 
 # Set environment variables for SQS queue URL and SSM parameter name
 ENV SQS_QUEUE_URL=https://sqs.il-central-1.amazonaws.com/120569624059/mySQSQueue
-ENV SSM_PARAMETER_NAME=/myapp/token
+# add prefix to your "${Prefix}/myapp/token" 
+ENV SSM_PARAMETER_NAME=/myapp/token 
 ENV AWS_DEFAULT_REGION=il-central-1
 
 # Install dependencies
