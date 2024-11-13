@@ -158,6 +158,12 @@ Resources:
     Properties:
       SubnetId: !Ref mySubnet2
       RouteTableId: !Ref myPublicRouteTable
+  
+  EC2KeyPair:
+    Type: AWS::EC2::KeyPair
+    Properties:
+      KeyName: !Sub "${Prefix}-KeyPair"  # Customize the Key Pair name as needed
+      KeyType: rsa
 
 
 Outputs:
@@ -184,3 +190,16 @@ Outputs:
     Value: !Ref myTargetGroup
     Export:
       Name: !Sub "${Prefix}-TargetGroupArn"
+
+  VPCId:
+    Description: "The ID of the VPC"
+    Value: !Ref myVPC  
+    Export:
+      Name: !Sub "${Prefix}-VPCId"
+  
+  KeyPairName:
+    Description: "The name of the Key Pair created for EC2 instances"
+    Value: !Ref EC2KeyPair
+    Export:
+      Name: !Sub "${Prefix}-KeyPairName"
+

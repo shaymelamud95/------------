@@ -4,17 +4,17 @@ Parameters:
     Description: "Prefix for naming resources"
     Default: "my"  # You can set a default value or leave it empty for users to specify
 
-  VpcId:
-    Type: AWS::EC2::VPC::Id
-    Description: The ID of the VPC where the EC2 instance and security group will be created.
+  # VpcId:
+  #   Type: AWS::EC2::VPC::Id
+  #   Description: The ID of the VPC where the EC2 instance and security group will be created.
 
-  SubnetId:
-    Type: AWS::EC2::Subnet::Id
-    Description: The ID of the subnet where the EC2 instance will be created.
+  # SubnetId:
+  #   Type: AWS::EC2::Subnet::Id
+  #   Description: The ID of the subnet where the EC2 instance will be created.
 
-  KeyName:
-    Type: AWS::EC2::KeyPair::KeyName
-    Description: The name of an existing EC2 KeyPair to enable SSH access to the instance.
+  # KeyName:
+  #   Type: AWS::EC2::KeyPair::KeyName
+  #   Description: The name of an existing EC2 KeyPair to enable SSH access to the instance.
 
 Resources:
   # Security Group for Jenkins EC2 Instance
@@ -22,7 +22,8 @@ Resources:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupDescription: Security group for Jenkins EC2 instance
-      VpcId: !Ref VpcId
+      VpcId: !ImportValue
+                'Fn::Sub': "${Prefix}-VpcId"
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: 22
@@ -44,7 +45,8 @@ Resources:
       InstanceType: t3.micro  # Free Tier eligible instance type
       SubnetId: !ImportValue
                   'Fn::Sub': "${Prefix}-Subnet1"
-      KeyName: !Ref KeyName
+      KeyName: !ImportValue
+                  'Fn::Sub': "${Prefix}-KeyPairName"
       SecurityGroupIds:
         - !Ref JenkinsSecurityGroup
       ImageId: ami-0e402a5891340c3c2  # Example Ubuntu AMI, update with the latest for your region

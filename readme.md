@@ -167,7 +167,10 @@ Execution:
 
 bash
 Copy code
-aws cloudformation create-stack --stack-name ${PREFIX}-jenkins-ec2-stack --template-body file://jenkins_ec2.yaml --capabilities CAPABILITY_NAMED_IAM
+aws cloudformation create-stack --stack-name ${PREFIX}
+-jenkins-ec2-stack --template-body file://jenkins_ec2.yaml 
+--parameters ParameterKey=Prefix,ParameterValue=${PREFIX} 
+--capabilities CAPABILITY_NAMED_IAM
 Verification:
 
 Go to the EC2 Console and verify that the instance is created.
