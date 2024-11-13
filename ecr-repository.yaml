@@ -50,7 +50,7 @@ Resources:
   Microservice2ECRRepository:
     Type: AWS::ECR::Repository
     Properties:
-      RepositoryName: microservice2-repo
+      RepositoryName: !Sub "${Prefix}-microservice2-repo"
       LifecyclePolicy:
         LifecyclePolicyText: |
           {

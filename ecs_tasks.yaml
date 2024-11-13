@@ -50,8 +50,8 @@ Resources:
       Cpu: "256"
       Memory: "512"
       NetworkMode: awsvpc
-      ExecutionRoleArn: !Ref !Sub "${Prefix}-ECSTaskExecutionRole" # ImportValue
-      TaskRoleArn: !Ref !Sub "${Prefix}-ECSTaskRole" # !ImportValue
+      ExecutionRoleArn: !ImportValue "myECSTaskExecutionRole"
+      TaskRoleArn: !ImportValue "myECSTaskRole"
       ContainerDefinitions:
         - Name: myMicroservice1
           Image: 120569624059.dkr.ecr.il-central-1.amazonaws.com/myapp-repository:1.0.12   # Placeholder image for testing
@@ -81,9 +81,9 @@ Resources:
           Essential: true
           Environment:
             - Name: SQS_QUEUE_URL
-              Value: !ImportValue mySQSQueue
+              Value: !ImportValue SQSQueueUrl
             - Name: S3_BUCKET_NAME
-              Value: !ImportValue myS3Bucket
+              Value: !ImportValue S3BucketName
       # EnableExecuteCommand: true
 
   # ECS Service for Microservice 1 (connected to Load Balancer)
