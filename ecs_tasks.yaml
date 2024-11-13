@@ -92,19 +92,19 @@ Resources:
     Properties:
       Cluster: !Ref ClusterName
       ServiceName: !Sub "${Prefix}-microservice1Service"
-      TaskDefinition: !Ref myMicroservice1TaskDefinition
+      TaskDefinition: !ImportValue myMicroservice1TaskDefinition
       DesiredCount: 1
       LaunchType: FARGATE
       NetworkConfiguration:
         AwsvpcConfiguration:
           Subnets:
-            - !Ref Subnet1
-            - !Ref Subnet2
+            - !ImportValue Subnet1
+            - !ImportValue Subnet2
           SecurityGroups:
-            - !Ref myECSSecurityGroup
+            - !ImportValue myECSSecurityGroup
           AssignPublicIp: ENABLED
       LoadBalancers:
-        - TargetGroupArn: !Ref TargetGroupArn
+        - TargetGroupArn: !ImportValue TargetGroupArn
           ContainerName: myMicroservice1
           ContainerPort: 80
       DeploymentConfiguration:
@@ -118,14 +118,14 @@ Resources:
     Properties:
       Cluster: !Ref ClusterName
       ServiceName: "${Prefix}-microservice2Service"
-      TaskDefinition: !Ref myMicroservice2TaskDefinition
+      TaskDefinition: !ImportValue myMicroservice2TaskDefinition
       DesiredCount: 1
       LaunchType: FARGATE
       NetworkConfiguration:
         AwsvpcConfiguration:
           Subnets:
-            - !Ref Subnet1
-            - !Ref Subnet2
+            - !ImportValue Subnet1
+            - !ImportValue Subnet2
           SecurityGroups:
-            - !Ref myECSSecurityGroup
+            - !ImportValue myECSSecurityGroup
           AssignPublicIp: ENABLED
