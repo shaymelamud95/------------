@@ -50,8 +50,12 @@ Resources:
       Cpu: "256"
       Memory: "512"
       NetworkMode: awsvpc
-      ExecutionRoleArn: !ImportValue "!Sub ${Prefix}-ECSTaskExecutionRole"
-      TaskRoleArn: !ImportValue "!Sub ${Prefix}-ECSTaskRole"
+      ExecutionRoleArn: 
+        - !ImportValue
+            'Fn::Sub': "${Prefix}-ECSTaskExecutionRole"
+      TaskRoleArn: 
+        - !ImportValue
+            'Fn::Sub': "${Prefix}-ECSTaskRole"
       ContainerDefinitions:
         - Name: myMicroservice1
           Image: 120569624059.dkr.ecr.il-central-1.amazonaws.com/myapp-repository:1.0.12   # Placeholder image for testing
@@ -73,8 +77,12 @@ Resources:
       Cpu: "256"
       Memory: "512"
       NetworkMode: awsvpc
-      TaskRoleArn: !ImportValue "!Sub ${Prefix}-ECSTaskRole"
-      ExecutionRoleArn: !ImportValue "!Sub ${Prefix}-ECSTaskExecutionRole"
+      TaskRoleArn: 
+        - !ImportValue
+            'Fn::Sub': "${Prefix}-ECSTaskRole"
+      ExecutionRoleArn:
+        - !ImportValue
+            'Fn::Sub': "${Prefix}-ECSTaskExecutionRole"
       ContainerDefinitions:
         - Name: myMicroservice2
           Image: amazon/amazon-ecs-sample   # Placeholder image for testing
