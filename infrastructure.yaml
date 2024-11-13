@@ -68,7 +68,7 @@ Resources:
   myECSCluster:
     Type: AWS::ECS::Cluster
     Properties:
-      ClusterName: myCluster
+      ClusterName: !Sub "${Prefix}-Cluster"
 
   # Application Load Balancer (ALB)
   myApplicationLoadBalancer:

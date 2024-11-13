@@ -125,7 +125,18 @@ aws cloudformation create-stack --stack-name ${PREFIX}-ecr-repositories-stack --
 Verification:
 
 Go to the ECR Console and check that repositories for both microservice1 and microservice2 are created.
-Step 6: ECS Task Definitions
+Step 6:
+infrastructure.yaml
+
+Purpose: Deploys both microservices to ECS using the previously defined task definitions.
+
+Execution:
+
+bash
+Copy code
+aws cloudformation create-stack --stack-name ${PREFIX}-infrastructure-stack --template-body file://infrastructure.yaml --parameters ParameterKey=Prefix,ParameterValue=${PREFIX} --capabilities CAPABILITY_NAMED_IAM
+
+Step 7: ECS Task Definitions
 
 Template: ecs_tasks.yaml
 
@@ -141,7 +152,7 @@ Verification:
 
 Go to the ECS Console > Task Definitions, and verify that task definitions for both microservice1 and microservice2 are created.
 Check the task definitions to ensure they include the correct environment variables and role ARNs.
-Step 7: Jenkins EC2 Instance
+Step 8: Jenkins EC2 Instance
 
 Template: jenkins_ec2.yaml
 
@@ -158,15 +169,7 @@ Go to the EC2 Console and verify that the instance is created.
 Once the instance is running, access Jenkins on http://<instance-ip>:8080 to configure and set up pipelines for the microservices.
 Step 8: Deploy Microservices to ECS
 
-Template: infrastructure.yaml
-
-Purpose: Deploys both microservices to ECS using the previously defined task definitions.
-
-Execution:
-
-bash
-Copy code
-aws cloudformation create-stack --stack-name ${PREFIX}-infrastructure-stack --template-body file://infrastructure.yaml --capabilities CAPABILITY_NAMED_IAM
+Template: 
 Verification:
 
 Go to the ECS Console > Clusters, and verify that services for both microservice1 and microservice2 are running.
