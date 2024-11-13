@@ -76,10 +76,10 @@ Outputs:
     Description: URI of the created ECR repository Microservice1ECRRepository
     Value: !GetAtt Microservice1ECRRepository.RepositoryUri
     Export:
-      Name: !Sub "${Prefix}-Microservice1ECRRepository"
+      Name: Microservice1ECRRepository
   
   Microservice2ECRRepository:
     Description: URI of the created ECR repository Microservice2ECRRepository
     Value: !GetAtt Microservice2ECRRepository.RepositoryUri
     Export:
-      Name: !Sub "${Prefix}-Microservice2ECRRepository"
+      Name: Microservice2ECRRepository
