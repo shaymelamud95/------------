@@ -86,6 +86,7 @@ Execution:
 bash
 Copy code
 aws cloudformation create-stack --stack-name ${PREFIX}-storage-queue-stack --template-body file://storage_and_queue.yaml --parameters ParameterKey=Prefix,ParameterValue=${PREFIX}
+
 Verification:
 
 Go to the S3 Console and verify that the specified bucket is created.

@@ -4,13 +4,13 @@ Parameters:
     Description: "Prefix for naming resources"
     Default: "my"  # You can set a default value or leave it empty for users to specify
 
-  S3BucketArn:
-    Type: String
-    Description: The ARN of the S3 bucket to which ECS tasks will have access.
+  # S3BucketArn:
+  #   Type: String
+  #   Description: The ARN of the S3 bucket to which ECS tasks will have access.
     
-  SQSQueueArn:
-    Type: String
-    Description: The ARN of the SQS queue to which ECS tasks will have access.
+  # SQSQueueArn:
+  #   Type: String
+  #   Description: The ARN of the SQS queue to which ECS tasks will have access.
 
 Resources:
   # ECS Task Execution Role
@@ -54,8 +54,8 @@ Resources:
                   - ssmmessages:OpenControlChannel
                   - ssmmessages:OpenDataChannel
                 Resource:
-                  - !Ref S3BucketArn   # Full ARN of the S3 bucket
-                  - !Ref SQSQueueArn   # Full ARN of the SQS queue
+                  - !ImportValue S3BucketArn   # Full ARN of the S3 bucket
+                  - !ImportValue SQSQueueArn   # Full ARN of the SQS queue
   # ECS Task Role for the application
   myECSTaskRole:
     Type: AWS::IAM::Role

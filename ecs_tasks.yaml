@@ -24,13 +24,13 @@ Parameters:
     Type: String
     Description: ARN of the ECS Task Execution Role
 
-  myS3Bucket:
-    Type: String
-    Description: Name of the S3 bucket for storage
+  # myS3Bucket:
+  #   Type: String
+  #   Description: Name of the S3 bucket for storage
 
-  mySQSQueue:
-    Type: String
-    Description: URL of the SQS queue for messaging
+  # mySQSQueue:
+  #   Type: String
+  #   Description: URL of the SQS queue for messaging
 
   TargetGroupArn:
     Type: String
@@ -60,9 +60,9 @@ Resources:
             - ContainerPort: 80
           Environment:
             - Name: SQS_QUEUE_URL
-              Value: !Ref mySQSQueue
+              Value: !ImportValue mySQSQueue
             - Name: S3_BUCKET_NAME
-              Value: !Ref myS3Bucket
+              Value: !ImportValue myS3Bucket
       # EnableExecuteCommand: true
 
   # Task Definition for Microservice 2
@@ -81,9 +81,9 @@ Resources:
           Essential: true
           Environment:
             - Name: SQS_QUEUE_URL
-              Value: !Ref mySQSQueue
+              Value: !ImportValue mySQSQueue
             - Name: S3_BUCKET_NAME
-              Value: !Ref myS3Bucket
+              Value: !ImportValue myS3Bucket
       # EnableExecuteCommand: true
 
   # ECS Service for Microservice 1 (connected to Load Balancer)
