@@ -126,7 +126,7 @@ Resources:
     Type: AWS::ECS::Service
     Properties:
       Cluster: !Ref ClusterName
-      ServiceName: "${Prefix}-microservice2Service"
+      ServiceName: !Sub "${Prefix}-microservice2Service"
       TaskDefinition: !Ref myMicroservice2TaskDefinition
       DesiredCount: 1
       LaunchType: FARGATE
