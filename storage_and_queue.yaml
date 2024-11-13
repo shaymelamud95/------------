@@ -36,3 +36,9 @@ Outputs:
     Value: !GetAtt mySQSQueue.Arn
     Export:
       Name: SQSQueueArn
+
+    S3BucketArn:
+    Description: "The ARN of the S3 Bucket created."
+    Value: !GetAtt myS3Bucket.Arn
+    Export:
+      Name: S3BucketArn
