@@ -1,0 +1,82 @@
+Parameters:
+  Prefix:
+    Type: String
+    Description: "Prefix for naming resources"
+    Default: "my"  # You can set a default value or leave it empty for users to specify
+
+Resources:
+  # IAM User for Programmatic Access
+  ECRUser:
+    Type: AWS::IAM::User
+    Properties:
+      UserName: !Sub "${Prefix}-ECRProgrammaticUser"
+      Policies:
+        - PolicyName: "ECRAccessPolicy"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - ecr:GetAuthorizationToken
+                  - ecr:BatchCheckLayerAvailability
+                  - ecr:BatchGetImage
+                  - ecr:GetDownloadUrlForLayer
+                  - ecr:PutImage
+                  - ecr:CompleteLayerUpload
+                  - ecr:UploadLayerPart
+                  - ecr:InitiateLayerUpload
+                  - ecr:ListImages
+                  - ecr:DescribeImages
+                Resource: "*"
+        - PolicyName: "ECSAccessPolicy"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - ecs:*
+                Resource: "*"
+        - PolicyName: "S3AccessPolicy"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:PutObject
+                  - s3:GetObject
+                  - s3:ListBucket
+                Resource: "*"
+        - PolicyName: "SQSAccessPolicy"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - sqs:SendMessage
+                  - sqs:ReceiveMessage
+                  - sqs:DeleteMessage
+                  - sqs:GetQueueAttributes
+                Resource: "*"
+        - PolicyName: "SSMParameterStoreAccess"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - ssm:GetParameter
+                  - ssm:GetParameters
+                Resource: "*"
+
+  # Access Key for the IAM User
+  ECRUserAccessKey:
+    Type: AWS::IAM::AccessKey
+    Properties:
+      UserName: !Ref ECRUser
+
+Outputs:
+  AccessKeyId:
+    Description: "Access Key ID for programmatic access"
+    Value: !Ref ECRUserAccessKey
+    Export:
+      Name: !Sub "${Prefix}-ECRUserAccessKeyId"
+

@@ -1,0 +1,85 @@
+Parameters:
+  Prefix:
+    Type: String
+    Description: "Prefix for naming resources"
+    Default: "my"  # You can set a default value or leave it empty for users to specify
+
+Resources:
+  Microservice1ECRRepository:
+    Type: AWS::ECR::Repository
+    Properties: 
+      RepositoryName: !Sub "${Prefix}-microservice1-repo"
+      LifecyclePolicy:
+        LifecyclePolicyText: |
+          {
+            "rules": [
+              {
+                "rulePriority": 1,
+                "description": "Expire untagged images older than 30 days",
+                "selection": {
+                  "tagStatus": "untagged",
+                  "countType": "sinceImagePushed",
+                  "countUnit": "days",
+                  "countNumber": 30
+                },
+                "action": {
+                  "type": "expire"
+                }
+              }
+            ]
+          }
+      RepositoryPolicyText:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal: "*"
+            Action:
+              - ecr:BatchCheckLayerAvailability
+              - ecr:BatchGetImage
+              - ecr:CompleteLayerUpload
+              - ecr:DescribeImages
+              - ecr:GetDownloadUrlForLayer
+              - ecr:InitiateLayerUpload
+              - ecr:PutImage
+              - ecr:UploadLayerPart
+            Condition:
+              StringEquals:
+                aws:PrincipalOrgID: "o-exampleorgid" # Replace with actual Org ID if needed
+
+  # ECR Repository for Microservice 2
+  Microservice2ECRRepository:
+    Type: AWS::ECR::Repository
+    Properties:
+      RepositoryName: microservice2-repo
+      LifecyclePolicy:
+        LifecyclePolicyText: |
+          {
+            "rules": [
+              {
+                "rulePriority": 1,
+                "description": "Expire untagged images after 30 days",
+                "selection": {
+                  "tagStatus": "untagged",
+                  "countType": "sinceImagePushed",
+                  "countUnit": "days",
+                  "countNumber": 30
+                },
+                "action": {
+                  "type": "expire"
+                }
+              }
+            ]
+          }
+
+Outputs:
+  Microservice1ECRRepository:
+    Description: URI of the created ECR repository Microservice1ECRRepository
+    Value: !GetAtt Microservice1ECRRepository.RepositoryUri
+    Export:
+      Name: !Sub "${Prefix}-Microservice1ECRRepository"
+  
+  Microservice2ECRRepository:
+    Description: URI of the created ECR repository Microservice2ECRRepository
+    Value: !GetAtt Microservice2ECRRepository.RepositoryUri
+    Export:
+      Name: !Sub "${Prefix}-Microservice2ECRRepository"

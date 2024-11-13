@@ -1,0 +1,135 @@
+Parameters:
+  Prefix:
+    Type: String
+    Description: "Prefix for naming resources"
+    Default: "my"  # You can set a default value or leave it empty for users to specify
+
+  S3BucketArn:
+    Type: String
+    Description: The ARN of the S3 bucket to which ECS tasks will have access.
+    
+  SQSQueueArn:
+    Type: String
+    Description: The ARN of the SQS queue to which ECS tasks will have access.
+
+Resources:
+  # ECS Task Execution Role
+  myECSTaskExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub "${Prefix}-ECSTaskExecutionRole"
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ecs-tasks.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: myECSAccessPolicy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - ecr:GetAuthorizationToken 
+                  - ecr:GetDownloadUrlForLayer
+                  - ecr:BatchGetImage
+                  - ecr:DescribeImages
+                  - ecr:BatchCheckLayerAvailability
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                  - s3:PutObject
+                  - s3:GetObject
+                  - s3:ListBucket
+                  - sqs:SendMessage
+                  - sqs:ReceiveMessage
+                  - sqs:DeleteMessage
+                  - sqs:GetQueueAttributes
+                  - ssm:GetParameter
+                  - ssm:DescribeParameters
+                  - secretsmanager:GetSecretValue
+                  - ssmmessages:CreateControlChannel
+                  - ssmmessages:CreateDataChannel
+                  - ssmmessages:OpenControlChannel
+                  - ssmmessages:OpenDataChannel
+                Resource:
+                  - !Ref S3BucketArn   # Full ARN of the S3 bucket
+                  - !Ref SQSQueueArn   # Full ARN of the SQS queue
+  # ECS Task Role for the application
+  myECSTaskRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub "${Prefix}-ECSTaskRole"
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ecs-tasks.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: ECSApplicationPolicy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - sqs:SendMessage
+                  - sqs:ReceiveMessage
+                  - sqs:DeleteMessage
+                  - sqs:GetQueueAttributes
+                Resource: 
+                  - !Ref SQSQueueArn   # Full ARN of the SQS queue
+
+  # Jenkins EC2 Instance Role
+  myJenkinsEC2Role:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub "${Prefix}-JenkinsEC2Role"
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ec2.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: myJenkinsFullAccessPolicy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - cloudformation:CreateStack
+                  - cloudformation:UpdateStack
+                  - cloudformation:DeleteStack
+                  - ec2:DescribeInstances
+                  - ec2:DescribeSubnets
+                  - ecs:*
+                  - s3:*
+                  - sqs:*
+                  - ssm:GetParameter
+                Resource: "*"
+
+  # Attach Instance Profile to EC2 (Jenkins EC2 Role)
+  myJenkinsInstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      InstanceProfileName: !Sub "${Prefix}-JenkinsInstanceProfile"
+      Roles:
+        - Ref: myJenkinsEC2Role
+
+Outputs:
+  myECSTaskExecutionRole:
+    Description: "ARN of the myECSTaskExecutionRole"
+    Value: !GetAtt myECSTaskExecutionRole.Arn
+    Export:
+      Name: !Sub "${Prefix}-ECSTaskExecutionRole"  # Export the value so it can be used in other stacks
+
+
+  myECSTaskRole:
+    Description: "ARN of the myECSTaskRole"
+    Value: !GetAtt myECSTaskRole.Arn
+    Export:
+      Name: !Sub "${Prefix}-ECSTaskRole"  # Export the value so it can be used in other stacks

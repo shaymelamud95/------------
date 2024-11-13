@@ -1,0 +1,160 @@
+Parameters:
+  Prefix:
+    Type: String
+    Description: "Prefix for naming resources"
+    Default: "my"  # You can set a default value or leave it empty for users to specify
+
+Resources:
+  # VPC - if not created already
+  myVPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+      Tags:
+        - Key: Name
+          Value: !Sub "${Prefix}-VPC"
+
+  # Public Subnet 1
+  mySubnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref myVPC
+      CidrBlock: 10.0.1.0/24
+      AvailabilityZone: !Select [0, !GetAZs '']
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: !Sub "${Prefix}-Subnet1"
+
+  # Public Subnet 2
+  mySubnet2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref myVPC
+      CidrBlock: 10.0.2.0/24
+      AvailabilityZone: !Select [1, !GetAZs '']
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: !Sub "${Prefix}-Subnet"
+
+  # Security Group for ECS tasks
+  myECSSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Security group for ECS tasks
+      VpcId: !Ref myVPC
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+
+  # Security Group for Load Balancer
+  myLoadBalancerSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Security group for ALB
+      VpcId: !Ref myVPC
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+
+  # ECS Cluster
+  myECSCluster:
+    Type: AWS::ECS::Cluster
+    Properties:
+      ClusterName: myCluster
+
+  # Application Load Balancer (ALB)
+  myApplicationLoadBalancer:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      Name: myALB
+      Subnets:
+        - Ref: mySubnet1
+        - Ref: mySubnet2
+      SecurityGroups:
+        - Ref: myLoadBalancerSecurityGroup
+      Scheme: internet-facing
+      LoadBalancerAttributes:
+        - Key: idle_timeout.timeout_seconds
+          Value: '60'
+
+  # Target Group for ECS Tasks
+  myTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      VpcId: !Ref myVPC
+      Port: 80
+      Protocol: HTTP
+      HealthCheckProtocol: HTTP
+      HealthCheckPort: 80
+      HealthCheckPath: /
+      HealthyThresholdCount: 3
+      UnhealthyThresholdCount: 3
+      HealthCheckIntervalSeconds: 30
+      HealthCheckTimeoutSeconds: 5
+      TargetType: ip
+      Name: myTargetGroup
+
+  # Listener for ALB
+  myLoadBalancerListener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      LoadBalancerArn: !Ref myApplicationLoadBalancer
+      Port: 80
+      Protocol: HTTP
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn: !Ref myTargetGroup
+
+  # Internet Gateway
+  myInternetGateway:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: !Sub "${Prefix}-InternetGateway"
+
+  # Attach Internet Gateway to VPC
+  myVPCGatewayAttachment:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId: !Ref myVPC
+      InternetGatewayId: !Ref myInternetGateway
+
+  # Route Table for public subnets
+  myPublicRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref myVPC
+      Tags:
+        - Key: Name
+          Value: !Sub "${Prefix}-PublicRouteTable"
+
+  # Route for public internet access
+  myPublicRoute:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId: !Ref myPublicRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref myInternetGateway
+
+  # Associate route table with subnet 1
+  mySubnet1RouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref mySubnet1
+      RouteTableId: !Ref myPublicRouteTable
+
+  # Associate route table with subnet 2
+  mySubnet2RouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref mySubnet2
+      RouteTableId: !Ref myPublicRouteTable

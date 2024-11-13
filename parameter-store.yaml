@@ -1,0 +1,14 @@
+Parameters:
+  MySecretToken:
+    Type: String
+    Description: "The secret token to be stored in Parameter Store"
+    NoEcho: true  # This prevents the token from being displayed in plaintext
+
+Resources:
+  MyTokenParameter:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: "/myapp/token"  # Customize this path if needed
+      Type: "String"  # Change to "SecureString" if secure storage is required and your CloudFormation supports it
+      Value: !Ref MySecretToken
+      Description: "Token used for authentication in my application"

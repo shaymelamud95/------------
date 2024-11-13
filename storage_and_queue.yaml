@@ -1,0 +1,32 @@
+Parameters:
+  Prefix:
+    Type: String
+    Description: "Prefix for naming resources"
+    Default: "my"  # You can set a default value or leave it empty for users to specify
+
+Resources:
+  # S3 Bucket
+  myS3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub "my-s3-bucket-${AWS::AccountId}"
+      AccessControl: Private
+      Tags:
+        - Key: Name
+          Value: !Sub "${Prefix}-S3Bucket"
+
+  # SQS Queue
+  mySQSQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: mySQSQueue
+      VisibilityTimeout: 60  # Adjust as needed
+
+Outputs:
+  S3BucketName:
+    Value: !Ref myS3Bucket
+    Description: The name of the S3 bucket created for storage.
+
+  SQSQueueUrl:
+    Value: !Ref mySQSQueue
+    Description: The URL of the SQS queue created for messaging.

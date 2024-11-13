@@ -1,0 +1,114 @@
+Parameters:
+  Prefix:
+    Type: String
+    Description: "Prefix for naming resources"
+    Default: "my"  # You can set a default value or leave it empty for users to specify
+
+  VpcId:
+    Type: AWS::EC2::VPC::Id
+    Description: The ID of the VPC where the EC2 instance and security group will be created.
+
+  SubnetId:
+    Type: AWS::EC2::Subnet::Id
+    Description: The ID of the subnet where the EC2 instance will be created.
+
+  KeyName:
+    Type: AWS::EC2::KeyPair::KeyName
+    Description: The name of an existing EC2 KeyPair to enable SSH access to the instance.
+
+Resources:
+  # Security Group for Jenkins EC2 Instance
+  JenkinsSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Security group for Jenkins EC2 instance
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0  # Allows SSH access (you might restrict to your IP)
+        - IpProtocol: tcp
+          FromPort: 8080
+          ToPort: 8080
+          CidrIp: 0.0.0.0/0  # Allows access to Jenkins on port 8080
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0  # Allow HTTP access (optional if needed)
+
+  # EC2 Instance for Jenkins
+  JenkinsInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: t3.micro  # Free Tier eligible instance type
+      SubnetId: !Ref SubnetId
+      KeyName: !Ref KeyName
+      SecurityGroupIds:
+        - !Ref JenkinsSecurityGroup
+      ImageId: ami-0e402a5891340c3c2  # Example Ubuntu AMI, update with the latest for your region
+      Tags:
+        - Key: Name
+          Value: !Sub "${Prefix}-JenkinsInstance"
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash
+          # Update package index
+          apt-get update -y
+
+          # Install Java
+          apt-get install -y openjdk-17-jre
+
+          # Add Jenkins key and repository
+          wget -O /usr/share/keyrings/jenkins-keyring.asc https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
+          echo "deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] https://pkg.jenkins.io/debian-stable binary/" | tee /etc/apt/sources.list.d/jenkins.list > /dev/null
+
+          # Update package index again and install Jenkins
+          apt-get update -y
+          apt-get install -y fontconfig jenkins
+
+          # Start and enable Jenkins
+          systemctl start jenkins
+          systemctl enable jenkins
+
+          # Install Docker
+          apt-get install -y docker.io
+          systemctl start docker
+          systemctl enable docker
+
+          # Add the ubuntu user to the Docker group
+          usermod -aG docker ubuntu
+
+          # Install Unzip (required for AWS CLI installation)
+          apt-get install -y unzip
+
+          # Download and install the AWS CLI
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+          unzip awscliv2.zip
+          sudo ./aws/install
+
+          # Clean up the installation files
+          rm -rf awscliv2.zip aws
+
+          # Restart Docker (optional)
+          systemctl restart docker
+
+
+Outputs:
+  JenkinsInstancePublicIP:
+    Description: Public IP of the Jenkins EC2 instance
+    Value: !GetAtt JenkinsInstance.PublicIp
+    Export:
+      Name: !Sub "${Prefix}-JenkinsInstancePublicIP"
+
+  JenkinsInstanceID:
+    Description: The instance ID of the Jenkins EC2 instance
+    Value: !Ref JenkinsInstance
+    Export:
+      Name: !Sub "${Prefix}-JenkinsInstanceID"
+
+
+
+
+
+
