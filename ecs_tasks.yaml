@@ -56,7 +56,8 @@ Resources:
         'Fn::Sub': "${Prefix}-ECSTaskExecutionRole"
       ContainerDefinitions:
         - Name: myMicroservice1
-          Image: 120569624059.dkr.ecr.il-central-1.amazonaws.com/myapp-repository:1.0.12   # Placeholder image for testing
+          Image: !ImportValue
+            'Fn::Sub': "${Prefix}-Microservice1ECRRepository:1.0.0"   # Placeholder image for testing
           Essential: true
           PortMappings:
             - ContainerPort: 80
