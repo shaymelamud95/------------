@@ -42,7 +42,8 @@ Resources:
     Type: AWS::EC2::Instance
     Properties:
       InstanceType: t3.micro  # Free Tier eligible instance type
-      SubnetId: !Ref SubnetId
+      SubnetId: !ImportValue
+                  'Fn::Sub': "${Prefix}-Subnet1"
       KeyName: !Ref KeyName
       SecurityGroupIds:
         - !Ref JenkinsSecurityGroup

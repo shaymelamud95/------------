@@ -53,7 +53,7 @@ Resources:
       ExecutionRoleArn: !ImportValue
         'Fn::Sub': "${Prefix}-ECSTaskExecutionRole"
       TaskRoleArn: !ImportValue
-        'Fn::Sub': "${Prefix}-ECSTaskRole"
+        'Fn::Sub': "${Prefix}-ECSTaskExecutionRole"
       ContainerDefinitions:
         - Name: myMicroservice1
           Image: 120569624059.dkr.ecr.il-central-1.amazonaws.com/myapp-repository:1.0.12   # Placeholder image for testing
