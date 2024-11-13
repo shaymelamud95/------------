@@ -60,9 +60,9 @@ Resources:
             - ContainerPort: 80
           Environment:
             - Name: SQS_QUEUE_URL
-              Value: !ImportValue mySQSQueue
+              Value: !ImportValue SQSQueueUrl
             - Name: S3_BUCKET_NAME
-              Value: !ImportValue myS3Bucket
+              Value: !ImportValue S3BucketArn
       # EnableExecuteCommand: true
 
   # Task Definition for Microservice 2
