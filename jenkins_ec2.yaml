@@ -46,7 +46,7 @@ Resources:
       SubnetId: !ImportValue
                   'Fn::Sub': "${Prefix}-Subnet1"
       KeyName: !ImportValue
-                  'Fn::Sub': "${Prefix}-KeyPairName"
+                  'Fn::Sub': "${Prefix}-KeyPairName" # you can chnge the ImportValue to Ref and pass it through parameters after creating it by yourself and dounloading it
       SecurityGroupIds:
         - !Ref JenkinsSecurityGroup
       ImageId: ami-0e402a5891340c3c2  # Example Ubuntu AMI, update with the latest for your region

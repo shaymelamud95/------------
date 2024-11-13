@@ -149,6 +149,8 @@ bash
 Copy code
 aws cloudformation create-stack --stack-name ${PREFIX}jenkins-ec2-stack --template-body file://jenkins_ec2.yaml --parameters ParameterKey=Prefix,ParameterValue=${PREFIX} --capabilities CAPABILITY_NAMED_IAM
 
+know that im creating the key pair here from cloudformation template you will not be able to download the .pem file so you can connect via aws console, if you want to use remote ssh instead change the, I wrote aline about it in the code. (line 49)
+
 Verification:
 
 in this EC2 jenkins is allready installed enabled and started,
