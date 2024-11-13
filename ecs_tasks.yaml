@@ -98,13 +98,13 @@ Resources:
       NetworkConfiguration:
         AwsvpcConfiguration:
           Subnets:
-            - !ImportValue "${Prefix}-Subnet1"
-            - !ImportValue "${Prefix}-Subnet2"
+            - !ImportValue "!Sub ${Prefix}-Subnet1"
+            - !ImportValue "!Sub ${Prefix}-Subnet2"
           SecurityGroups:
-            - !ImportValue "${Prefix}-ECSSecurityGroup"
+            - !ImportValue "!Sub ${Prefix}-ECSSecurityGroup"
           AssignPublicIp: ENABLED
       LoadBalancers:
-        - TargetGroupArn: !ImportValue "${Prefix}-TargetGroupArn"
+        - TargetGroupArn: !ImportValue "!Sub ${Prefix}-TargetGroupArn"
           ContainerName: myMicroservice1
           ContainerPort: 80
       DeploymentConfiguration:
@@ -124,8 +124,8 @@ Resources:
       NetworkConfiguration:
         AwsvpcConfiguration:
           Subnets:
-            - !ImportValue "${Prefix}-Subnet1"
-            - !ImportValue "${Prefix}-Subnet2"
+            - !ImportValue "!Sub ${Prefix}-Subnet1"
+            - !ImportValue "!Sub ${Prefix}-Subnet2"
           SecurityGroups:
-            - !ImportValue "${Prefix}-ECSSecurityGroup"
+            - !ImportValue "!Sub ${Prefix}-ECSSecurityGroup"
           AssignPublicIp: ENABLED
