@@ -100,7 +100,7 @@ Resources:
       HealthCheckIntervalSeconds: 30
       HealthCheckTimeoutSeconds: 5
       TargetType: ip
-      Name: myTargetGroup
+      Name: !Sub "${Prefix}-TargetGroup"
 
   # Listener for ALB
   myLoadBalancerListener:
