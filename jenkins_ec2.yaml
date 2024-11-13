@@ -23,7 +23,7 @@ Resources:
     Properties:
       GroupDescription: Security group for Jenkins EC2 instance
       VpcId: !ImportValue
-                'Fn::Sub': "${Prefix}-VpcId"
+                'Fn::Sub': "${Prefix}-VPCId"
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: 22

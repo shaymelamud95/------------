@@ -137,17 +137,37 @@ Copy code
 aws cloudformation create-stack --stack-name ${PREFIX}-infrastructure-stack --template-body file://infrastructure.yaml --parameters ParameterKey=Prefix,ParameterValue=${PREFIX} --capabilities CAPABILITY_NAMED_IAM
 
 Step 7:
-before continue with cloudformation templates lets build a docker and push it to the registry:
+before continue with cloudformation templates lets build a docker and push it to the registry: lets automate it with jenkins
 
+Template: jenkins_ec2.yaml
 
+Purpose: Creates an EC2 instance for Jenkins to manage CI/CD pipelines.
 
-Step 8: ECS Task Definitions
+Execution:
+Step 8: Jenkins EC2 Instance
+bash
+Copy code
+aws cloudformation create-stack --stack-name ${PREFIX}jenkins-ec2-stack --template-body file://jenkins_ec2.yaml --parameters ParameterKey=Prefix,ParameterValue=${PREFIX} --capabilities CAPABILITY_NAMED_IAM
+
+Verification:
+
+in this EC2 jenkins is allready installed enabled and started,
+check : sudo systemctl status jenkins
+
+Go to the EC2 Console and verify that the instance is created.
+Once the instance is running, access Jenkins on http://<instance-ip>:8080 to configure and set up pipelines for the microservices.
+
+configure jenkins as it says, copy password create user ec.
+when you have jenkins installed:
+
+(or you have jenkins pre installed just make SG and route for the new VPC to comunicate)
+
+Execution:
+Step 9: ECS Task Definitions
 
 Template: ecs_tasks.yaml
 
 Purpose: Defines ECS task definitions for both microservices, specifying container configurations, environment variables, and IAM roles.
-
-Execution:
 
 bash
 Copy code
@@ -157,24 +177,9 @@ Verification:
 
 Go to the ECS Console > Task Definitions, and verify that task definitions for both microservice1 and microservice2 are created.
 Check the task definitions to ensure they include the correct environment variables and role ARNs.
-Step 9: Jenkins EC2 Instance
 
-Template: jenkins_ec2.yaml
 
-Purpose: Creates an EC2 instance for Jenkins to manage CI/CD pipelines.
 
-Execution:
-
-bash
-Copy code
-aws cloudformation create-stack --stack-name ${PREFIX}
--jenkins-ec2-stack --template-body file://jenkins_ec2.yaml 
---parameters ParameterKey=Prefix,ParameterValue=${PREFIX} 
---capabilities CAPABILITY_NAMED_IAM
-Verification:
-
-Go to the EC2 Console and verify that the instance is created.
-Once the instance is running, access Jenkins on http://<instance-ip>:8080 to configure and set up pipelines for the microservices.
 Step 10: Deploy Microservices to ECS
 
 Template: 
