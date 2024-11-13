@@ -9,7 +9,7 @@ Resources:
   myS3Bucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Sub "my-s3-bucket-${AWS::AccountId}"
+      BucketName: !Sub "${Prefix}-s3-bucket-${AWS::AccountId}"
       AccessControl: Private
       Tags:
         - Key: Name
@@ -19,7 +19,7 @@ Resources:
   mySQSQueue:
     Type: AWS::SQS::Queue
     Properties:
-      QueueName: mySQSQueue
+      QueueName: !Sub "${Prefix}-SQSQueue"
       VisibilityTimeout: 60  # Adjust as needed
 
 Outputs:

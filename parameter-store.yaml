@@ -13,7 +13,7 @@ Resources:
   MyTokenParameter:
     Type: AWS::SSM::Parameter
     Properties:
-      Name: !Sub "${Prefix}/myapp/token"  # Customize this path if needed
+      Name: !Sub "/${Prefix}/myapp/token"  # Customize this path if needed
       Type: "String"  # Change to "SecureString" if secure storage is required and your CloudFormation supports it
       Value: !Ref MySecretToken
       Description: "Token used for authentication in my application"
