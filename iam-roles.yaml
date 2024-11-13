@@ -80,7 +80,7 @@ Resources:
                   - sqs:DeleteMessage
                   - sqs:GetQueueAttributes
                 Resource: 
-                  - !Ref SQSQueueArn   # Full ARN of the SQS queue
+                  - !ImportValue SQSQueueArn   # Full ARN of the SQS queue
 
   # Jenkins EC2 Instance Role
   myJenkinsEC2Role:
