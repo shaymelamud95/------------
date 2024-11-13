@@ -26,10 +26,14 @@ Outputs:
   S3BucketName:
     Value: !Ref myS3Bucket
     Description: The name of the S3 bucket created for storage.
+    Export:
+      Name: S3BucketName
 
   SQSQueueUrl:
     Value: !Ref mySQSQueue
     Description: The URL of the SQS queue created for messaging.
+    Export:
+      Name: SQSQueueUrl
 
   SQSQueueArn:
     Description: "The ARN of the SQS queue created for messaging."
