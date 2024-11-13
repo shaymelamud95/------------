@@ -98,8 +98,8 @@ Resources:
       NetworkConfiguration:
         AwsvpcConfiguration:
           Subnets:
-            - !ImportValue Subnet1
-            - !ImportValue Subnet2
+            - !ImportValue "${Prefix}-Subnet1"
+            - !ImportValue "${Prefix}-Subnet2"
           SecurityGroups:
             - !ImportValue "${Prefix}-ECSSecurityGroup"
           AssignPublicIp: ENABLED
@@ -124,8 +124,8 @@ Resources:
       NetworkConfiguration:
         AwsvpcConfiguration:
           Subnets:
-            - !ImportValue Subnet1
-            - !ImportValue Subnet2
+            - !ImportValue "${Prefix}-Subnet1"
+            - !ImportValue "${Prefix}-Subnet2"
           SecurityGroups:
             - !ImportValue "${Prefix}-ECSSecurityGroup"
           AssignPublicIp: ENABLED
