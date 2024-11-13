@@ -74,7 +74,7 @@ Resources:
   myApplicationLoadBalancer:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties:
-      Name: myALB
+      Name: !Sub "${Prefix}-ALB"
       Subnets:
         - Ref: mySubnet1
         - Ref: mySubnet2
