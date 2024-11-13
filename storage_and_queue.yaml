@@ -30,3 +30,9 @@ Outputs:
   SQSQueueUrl:
     Value: !Ref mySQSQueue
     Description: The URL of the SQS queue created for messaging.
+
+  SQSQueueArn:
+    Description: "The ARN of the SQS queue created for messaging."
+    Value: !GetAtt mySQSQueue.Arn
+    Export:
+      Name: SQSQueueArn
