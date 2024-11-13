@@ -101,10 +101,10 @@ Resources:
             - !ImportValue Subnet1
             - !ImportValue Subnet2
           SecurityGroups:
-            - !ImportValue myECSSecurityGroup
+            - !ImportValue "${Prefix}-ECSSecurityGroup"
           AssignPublicIp: ENABLED
       LoadBalancers:
-        - TargetGroupArn: !ImportValue TargetGroupArn
+        - TargetGroupArn: !ImportValue "${Prefix}-TargetGroupArn"
           ContainerName: myMicroservice1
           ContainerPort: 80
       DeploymentConfiguration:
@@ -127,5 +127,5 @@ Resources:
             - !ImportValue Subnet1
             - !ImportValue Subnet2
           SecurityGroups:
-            - !ImportValue myECSSecurityGroup
+            - !ImportValue "${Prefix}-ECSSecurityGroup"
           AssignPublicIp: ENABLED
