@@ -6,28 +6,28 @@ Parameters:
 
 Resources:
   # KMS Key for encrypting SecureString parameters
-  MyKMSKey:
-    Type: AWS::KMS::Key
-    Properties:
-      Description: "KMS key for encrypting secure parameters in Parameter Store"
-      EnableKeyRotation: true
-      KeyPolicy:
-        Version: "2012-10-17"
-        Statement:
-          # Allow root account full access to the KMS key
-          - Effect: Allow
-            Principal:
-              AWS: !Sub "arn:aws:iam::${AWS::AccountId}:root"
-            Action: "kms:*"
-            Resource: "*"
-          # Allow SSM service to use the KMS key for parameter encryption and decryption
-          - Effect: Allow
-            Principal:
-              Service: ssm.amazonaws.com
-            Action:
-              - "kms:Decrypt"
-              - "kms:GenerateDataKey"
-            Resource: "*"
+  # MyKMSKey:
+  #   Type: AWS::KMS::Key
+  #   Properties:
+  #     Description: "KMS key for encrypting secure parameters in Parameter Store"
+  #     EnableKeyRotation: true
+  #     KeyPolicy:
+  #       Version: "2012-10-17"
+  #       Statement:
+  #         # Allow root account full access to the KMS key
+  #         - Effect: Allow
+  #           Principal:
+  #             AWS: !Sub "arn:aws:iam::${AWS::AccountId}:root"
+  #           Action: "kms:*"
+  #           Resource: "*"
+  #         # Allow SSM service to use the KMS key for parameter encryption and decryption
+  #         - Effect: Allow
+  #           Principal:
+  #             Service: ssm.amazonaws.com
+  #           Action:
+  #             - "kms:Decrypt"
+  #             - "kms:GenerateDataKey"
+  #           Resource: "*"
 
  # IAM User for Programmatic Access
   ECRUser:
@@ -90,33 +90,33 @@ Resources:
                   - ssm:GetParameter
                   - ssm:GetParameters
                 Resource: "*"
-        - PolicyName: "KMSAccessPolicy"
-          PolicyDocument:
-            Version: "2012-10-17"
-            Statement:
-              # Allow the user to manage KMS keys (create, describe, and other KMS actions)
-              - Effect: Allow
-                Action:
-                  - kms:CreateKey
-                  - kms:DescribeKey
-                  - kms:EnableKey
-                  - kms:DisableKey
-                  - kms:ScheduleKeyDeletion
-                  - kms:CancelKeyDeletion
-                  - kms:ListAliases
-                  - kms:ListKeys
-                  - kms:PutKeyPolicy
-                  - kms:UpdateKeyDescription
-                Resource: "*"  # Allows the user to create and manage any KMS key
-              # Allow the user to use specific KMS key actions on the MyKMSKey only
-              - Effect: Allow
-                Action:
-                  - kms:Encrypt
-                  - kms:Decrypt
-                  - kms:ReEncrypt*
-                  - kms:GenerateDataKey*
-                  - kms:DescribeKey
-                Resource: !GetAtt MyKMSKey.Arn  # Grants these actions only on the specified KMS key
+        # - PolicyName: "KMSAccessPolicy"
+        #   PolicyDocument:
+        #     Version: "2012-10-17"
+        #     Statement:
+        #       # Allow the user to manage KMS keys (create, describe, and other KMS actions)
+        #       - Effect: Allow
+        #         Action:
+        #           - kms:CreateKey
+        #           - kms:DescribeKey
+        #           - kms:EnableKey
+        #           - kms:DisableKey
+        #           - kms:ScheduleKeyDeletion
+        #           - kms:CancelKeyDeletion
+        #           - kms:ListAliases
+        #           - kms:ListKeys
+        #           - kms:PutKeyPolicy
+        #           - kms:UpdateKeyDescription
+        #         Resource: "*"  # Allows the user to create and manage any KMS key
+        #       # Allow the user to use specific KMS key actions on the MyKMSKey only
+        #       - Effect: Allow
+        #         Action:
+        #           - kms:Encrypt
+        #           - kms:Decrypt
+        #           - kms:ReEncrypt*
+        #           - kms:GenerateDataKey*
+        #           - kms:DescribeKey
+        #         Resource: !GetAtt MyKMSKey.Arn  # Grants these actions only on the specified KMS key
                 
   # Access Key for the IAM User
   ECRUserAccessKey:
@@ -125,39 +125,34 @@ Resources:
       UserName: !Ref ECRUser
     DependsOn: ECRUser  # Ensure ECRUser is created first
 
-  # Store AccessKeyId and SecretAccessKey in Parameter Store
-  AccessKeyIdParameter:
-    Type: AWS::SSM::Parameter
-    Properties:
-      Name: !Sub "/${Prefix}/ECRUser/AccessKeyId"
-      Type: String
-      Value: !Ref ECRUserAccessKey
-    DependsOn: ECRUserAccessKey  # Ensure access key is created first
+  # # Store AccessKeyId and SecretAccessKey in Parameter Store
+  # AccessKeyIdParameter:
+  #   Type: AWS::SSM::Parameter
+  #   Properties:
+  #     Name: !Sub "/${Prefix}/ECRUser/AccessKeyId"
+  #     Type: String
+  #     Value: !Ref ECRUserAccessKey
+  #   DependsOn: ECRUserAccessKey  # Ensure access key is created first
 
-  SecretAccessKeyParameter:
-    Type: AWS::SSM::Parameter
-    Properties:
-      Name: !Sub "/${Prefix}/ECRUser/SecretAccessKey"
-      Type: String # SecureString should be
-      Value: !GetAtt ECRUserAccessKey.SecretAccessKey
-      KeyId: !Ref MyKMSKey
-    DependsOn: ECRUserAccessKey  # Ensure access key is created first
+  # SecretAccessKeyParameter:
+  #   Type: AWS::SSM::Parameter
+  #   Properties:
+  #     Name: !Sub "/${Prefix}/ECRUser/SecretAccessKey"
+  #     Type: String # SecureString should be
+  #     Value: !GetAtt ECRUserAccessKey.SecretAccessKey
+  #     KeyId: !Ref MyKMSKey
+  #   DependsOn: ECRUserAccessKey  # Ensure access key is created first
 
 Outputs:
-  AccessKeyIdParameter:
-    Description: "SSM Parameter name for the Access Key ID"
-    Value: !Ref AccessKeyIdParameter
-    Export:
-      Name: !Sub "${Prefix}-AccessKeyIdParameter"
-
-  SecretAccessKeyParameter:
-    Description: "SSM Parameter name for the Secret Access Key"
-    Value: !Ref SecretAccessKeyParameter
-    Export:
-      Name: !Sub "${Prefix}-SecretAccessKeyParameter"
-    
   AccessKeyId:
     Description: "Access Key ID for programmatic access"
     Value: !Ref ECRUserAccessKey
     Export:
       Name: !Sub "${Prefix}-ECRUserAccessKeyId"
+
+  SecretAccessKey:
+    Description: "Secret Access Key for programmatic access"
+    Value: !GetAtt ECRUserAccessKey.SecretAccessKey
+    Export:
+      Name: !Sub "${Prefix}-ECRUserSecretAccessKey"
+
