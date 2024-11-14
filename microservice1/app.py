@@ -22,7 +22,7 @@ VALID_TOKEN = get_valid_token()
 # Define the home route for health check
 @app.route("/")
 def home():
-    return "Hello, your application is running! {PREFIX}", 200
+    return f"Hello, your application is running! {PREFIX}", 200
 
 # Define the /process route to handle POST requests
 @app.route("/process", methods=["POST"])

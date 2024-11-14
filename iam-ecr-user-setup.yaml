@@ -99,6 +99,14 @@ Resources:
                 Resource: 
                   - arn:aws:iam::120569624059:role/t1-ECSTaskExecutionRole
                   - arn:aws:iam::120569624059:role/t1-ECSTaskRole
+        - PolicyName: "CloudFormationAccessPolicy"  # New policy for CloudFormation access
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - cloudformation:ListExports
+                Resource: "*"
 
         # - PolicyName: "KMSAccessPolicy"
         #   PolicyDocument:
@@ -135,23 +143,25 @@ Resources:
       UserName: !Ref ECRUser
     DependsOn: ECRUser  # Ensure ECRUser is created first
 
-  # # Store AccessKeyId and SecretAccessKey in Parameter Store
-  # AccessKeyIdParameter:
-  #   Type: AWS::SSM::Parameter
-  #   Properties:
-  #     Name: !Sub "/${Prefix}/ECRUser/AccessKeyId"
-  #     Type: String
-  #     Value: !Ref ECRUserAccessKey
-  #   DependsOn: ECRUserAccessKey  # Ensure access key is created first
+  # Store AccessKeyId in SSM Parameter Store
+  AccessKeyIdParameter:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: !Sub "/${Prefix}/ECRUser/AccessKeyId"
+      Type: "String"
+      Value: !Ref ECRUserAccessKey
+      Description: "Access Key ID for ECRUser programmatic access"
+    DependsOn: ECRUserAccessKey  # Ensure access key is created first
 
-  # SecretAccessKeyParameter:
-  #   Type: AWS::SSM::Parameter
-  #   Properties:
-  #     Name: !Sub "/${Prefix}/ECRUser/SecretAccessKey"
-  #     Type: String # SecureString should be
-  #     Value: !GetAtt ECRUserAccessKey.SecretAccessKey
-  #     KeyId: !Ref MyKMSKey
-  #   DependsOn: ECRUserAccessKey  # Ensure access key is created first
+  # Store SecretAccessKey in SSM Parameter Store
+  SecretAccessKeyParameter:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: !Sub "/${Prefix}/ECRUser/SecretAccessKey"
+      Type: "String"  # Use SecureString to keep it encrypted
+      Value: !GetAtt ECRUserAccessKey.SecretAccessKey
+      Description: "Secret Access Key for ECRUser programmatic access"
+    DependsOn: ECRUserAccessKey  # Ensure access key is created first
 
 Outputs:
   AccessKeyId:
