@@ -181,7 +181,7 @@ you can see then in ssm parameter store or in the output template param list (no
 run the pipeline and check that new revition in task deff.
 and service updated.
 
-you can check in LB the app![alt text](image.png)
+you can check in LB the app! and see "your application is running!"
 and check the /proccess rout for sending message to SQS and resiving it in S3.
 
 

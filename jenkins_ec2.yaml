@@ -4,18 +4,6 @@ Parameters:
     Description: "Prefix for naming resources"
     Default: "my"  # You can set a default value or leave it empty for users to specify
 
-  # VpcId:
-  #   Type: AWS::EC2::VPC::Id
-  #   Description: The ID of the VPC where the EC2 instance and security group will be created.
-
-  # SubnetId:
-  #   Type: AWS::EC2::Subnet::Id
-  #   Description: The ID of the subnet where the EC2 instance will be created.
-
-  # KeyName:
-  #   Type: AWS::EC2::KeyPair::KeyName
-  #   Description: The name of an existing EC2 KeyPair to enable SSH access to the instance.
-
 Resources:
   # Security Group for Jenkins EC2 Instance
   JenkinsSecurityGroup:

@@ -5,30 +5,6 @@ Parameters:
     Default: "my"  # You can set a default value or leave it empty for users to specify
 
 Resources:
-  # KMS Key for encrypting SecureString parameters
-  # MyKMSKey:
-  #   Type: AWS::KMS::Key
-  #   Properties:
-  #     Description: "KMS key for encrypting secure parameters in Parameter Store"
-  #     EnableKeyRotation: true
-  #     KeyPolicy:
-  #       Version: "2012-10-17"
-  #       Statement:
-  #         # Allow root account full access to the KMS key
-  #         - Effect: Allow
-  #           Principal:
-  #             AWS: !Sub "arn:aws:iam::${AWS::AccountId}:root"
-  #           Action: "kms:*"
-  #           Resource: "*"
-  #         # Allow SSM service to use the KMS key for parameter encryption and decryption
-  #         - Effect: Allow
-  #           Principal:
-  #             Service: ssm.amazonaws.com
-  #           Action:
-  #             - "kms:Decrypt"
-  #             - "kms:GenerateDataKey"
-  #           Resource: "*"
-
  # IAM User for Programmatic Access
   ECRUser:
     Type: AWS::IAM::User
@@ -108,34 +84,7 @@ Resources:
                   - cloudformation:ListExports
                 Resource: "*"
 
-        # - PolicyName: "KMSAccessPolicy"
-        #   PolicyDocument:
-        #     Version: "2012-10-17"
-        #     Statement:
-        #       # Allow the user to manage KMS keys (create, describe, and other KMS actions)
-        #       - Effect: Allow
-        #         Action:
-        #           - kms:CreateKey
-        #           - kms:DescribeKey
-        #           - kms:EnableKey
-        #           - kms:DisableKey
-        #           - kms:ScheduleKeyDeletion
-        #           - kms:CancelKeyDeletion
-        #           - kms:ListAliases
-        #           - kms:ListKeys
-        #           - kms:PutKeyPolicy
-        #           - kms:UpdateKeyDescription
-        #         Resource: "*"  # Allows the user to create and manage any KMS key
-        #       # Allow the user to use specific KMS key actions on the MyKMSKey only
-        #       - Effect: Allow
-        #         Action:
-        #           - kms:Encrypt
-        #           - kms:Decrypt
-        #           - kms:ReEncrypt*
-        #           - kms:GenerateDataKey*
-        #           - kms:DescribeKey
-        #         Resource: !GetAtt MyKMSKey.Arn  # Grants these actions only on the specified KMS key
-                
+
   # Access Key for the IAM User
   ECRUserAccessKey:
     Type: AWS::IAM::AccessKey
