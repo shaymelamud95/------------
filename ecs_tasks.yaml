@@ -76,7 +76,7 @@ Resources:
       Memory: "512"
       NetworkMode: awsvpc
       TaskRoleArn: !ImportValue
-        'Fn::Sub': "${Prefix}-ECSTaskRole"
+        'Fn::Sub': "${Prefix}-ECSTaskExecutionRole"
       ExecutionRoleArn: !ImportValue
         'Fn::Sub': "${Prefix}-ECSTaskExecutionRole"
       ContainerDefinitions:

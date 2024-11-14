@@ -17,3 +17,9 @@ Resources:
       Type: "String"  # Change to "SecureString" if secure storage is required and your CloudFormation supports it
       Value: !Ref MySecretToken
       Description: "Token used for authentication in my application"
+Outputs:
+  EnvironmentPrefix:
+    Description: "Environment Prefix"
+    Value: !Ref Prefix
+    Export:
+      Name: EnvironmentPrefix
