@@ -29,80 +29,95 @@ Resources:
               - "kms:GenerateDataKey"
             Resource: "*"
 
-  # IAM User for Programmatic Access
-  ECRUser:
-    Type: AWS::IAM::User
-    Properties:
-      UserName: !Sub "${Prefix}-ECRProgrammaticUser"
-      Policies:
-        - PolicyName: "ECRAccessPolicy"
-          PolicyDocument:
-            Version: "2012-10-17"
-            Statement:
-              - Effect: Allow
-                Action:
-                  - ecr:GetAuthorizationToken
-                  - ecr:BatchCheckLayerAvailability
-                  - ecr:BatchGetImage
-                  - ecr:GetDownloadUrlForLayer
-                  - ecr:PutImage
-                  - ecr:CompleteLayerUpload
-                  - ecr:UploadLayerPart
-                  - ecr:InitiateLayerUpload
-                  - ecr:ListImages
-                  - ecr:DescribeImages
-                Resource: "*"
-        - PolicyName: "ECSAccessPolicy"
-          PolicyDocument:
-            Version: "2012-10-17"
-            Statement:
-              - Effect: Allow
-                Action:
-                  - ecs:*
-                Resource: "*"
-        - PolicyName: "S3AccessPolicy"
-          PolicyDocument:
-            Version: "2012-10-17"
-            Statement:
-              - Effect: Allow
-                Action:
-                  - s3:PutObject
-                  - s3:GetObject
-                  - s3:ListBucket
-                Resource: "*"
-        - PolicyName: "SQSAccessPolicy"
-          PolicyDocument:
-            Version: "2012-10-17"
-            Statement:
-              - Effect: Allow
-                Action:
-                  - sqs:SendMessage
-                  - sqs:ReceiveMessage
-                  - sqs:DeleteMessage
-                  - sqs:GetQueueAttributes
-                Resource: "*"
-        - PolicyName: "SSMParameterStoreAccess"
-          PolicyDocument:
-            Version: "2012-10-17"
-            Statement:
-              - Effect: Allow
-                Action:
-                  - ssm:GetParameter
-                  - ssm:GetParameters
-                Resource: "*"
-        - PolicyName: "KMSAccessPolicy"
-          PolicyDocument:
-            Version: "2012-10-17"
-            Statement:
-              - Effect: Allow
-                Action:
-                  - kms:Encrypt
-                  - kms:Decrypt
-                  - kms:ReEncrypt*
-                  - kms:GenerateDataKey*
-                  - kms:DescribeKey
-                Resource: !GetAtt MyKMSKey.Arn  # Get the ARN of the KMS key
-
+ # IAM User for Programmatic Access
+ECRUser:
+  Type: AWS::IAM::User
+  Properties:
+    UserName: !Sub "${Prefix}-ECRProgrammaticUser"
+    Policies:
+      - PolicyName: "ECRAccessPolicy"
+        PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Action:
+                - ecr:GetAuthorizationToken
+                - ecr:BatchCheckLayerAvailability
+                - ecr:BatchGetImage
+                - ecr:GetDownloadUrlForLayer
+                - ecr:PutImage
+                - ecr:CompleteLayerUpload
+                - ecr:UploadLayerPart
+                - ecr:InitiateLayerUpload
+                - ecr:ListImages
+                - ecr:DescribeImages
+              Resource: "*"
+      - PolicyName: "ECSAccessPolicy"
+        PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Action:
+                - ecs:*
+              Resource: "*"
+      - PolicyName: "S3AccessPolicy"
+        PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Action:
+                - s3:PutObject
+                - s3:GetObject
+                - s3:ListBucket
+              Resource: "*"
+      - PolicyName: "SQSAccessPolicy"
+        PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Action:
+                - sqs:SendMessage
+                - sqs:ReceiveMessage
+                - sqs:DeleteMessage
+                - sqs:GetQueueAttributes
+              Resource: "*"
+      - PolicyName: "SSMParameterStoreAccess"
+        PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Action:
+                - ssm:GetParameter
+                - ssm:GetParameters
+              Resource: "*"
+      - PolicyName: "KMSAccessPolicy"
+        PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            # Allow the user to manage KMS keys (create, describe, and other KMS actions)
+            - Effect: Allow
+              Action:
+                - kms:CreateKey
+                - kms:DescribeKey
+                - kms:EnableKey
+                - kms:DisableKey
+                - kms:ScheduleKeyDeletion
+                - kms:CancelKeyDeletion
+                - kms:ListAliases
+                - kms:ListKeys
+                - kms:PutKeyPolicy
+                - kms:UpdateKeyDescription
+              Resource: "*"  # Allows the user to create and manage any KMS key
+            # Allow the user to use specific KMS key actions on the MyKMSKey only
+            - Effect: Allow
+              Action:
+                - kms:Encrypt
+                - kms:Decrypt
+                - kms:ReEncrypt*
+                - kms:GenerateDataKey*
+                - kms:DescribeKey
+              Resource: !GetAtt MyKMSKey.Arn  # Grants these actions only on the specified KMS key
+              
   # Access Key for the IAM User
   ECRUserAccessKey:
     Type: AWS::IAM::AccessKey
