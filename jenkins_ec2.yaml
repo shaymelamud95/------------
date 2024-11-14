@@ -79,7 +79,8 @@ Resources:
           systemctl start docker
           systemctl enable docker
 
-          # Add the ubuntu user to the Docker group
+          # Add the jenkins user and the ubuntu user to the Docker group
+          usermod -aG docker jenkins
           usermod -aG docker ubuntu
 
           # Install Unzip (required for AWS CLI installation)

@@ -13,7 +13,7 @@ WORKDIR /app
 RUN pip install --no-cache-dir boto3
 
 # Copy the application code
-COPY app2.py .
+COPY microservice2/app2.py .
 
 # Run the service
 CMD ["python", "app2.py"]

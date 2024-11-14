@@ -12,7 +12,7 @@ RUN pip install boto3 flask
 
 # Copy the application code
 WORKDIR /app
-COPY app.py .  # Rename the code file as app.py
+COPY microservice1/app.py .
 
 # Run the Flask app
 CMD ["python", "app.py"]
