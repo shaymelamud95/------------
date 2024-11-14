@@ -56,8 +56,7 @@ Resources:
         'Fn::Sub': "${Prefix}-ECSTaskExecutionRole"
       ContainerDefinitions:
         - Name: myMicroservice1
-          Image: !ImportValue
-            'Fn::Sub': "${Microservice1ECRRepository}:1.0.0"    # Placeholder image for testing
+          Image: "nginx:latest"    # Placeholder image before building uploading from Jenkins
           Essential: true
           PortMappings:
             - ContainerPort: 80
@@ -82,8 +81,7 @@ Resources:
         'Fn::Sub': "${Prefix}-ECSTaskExecutionRole"
       ContainerDefinitions:
         - Name: myMicroservice2
-          Image: !ImportValue
-            'Fn::Sub': "${Microservice2ECRRepository}:1.0.0"   # Placeholder image for testing
+          Image: "nginx:latest"   # Using a simple, publicly available image as a placeholder
           Essential: true
           Environment:
             - Name: SQS_QUEUE_URL
