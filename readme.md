@@ -164,6 +164,7 @@ when you have jenkins installed:
 
 (or you have jenkins pre installed just make SG and route for the new VPC to comunicate)
 
+while Jenkins installs the recomended plugins lets exec next template:
 Execution:
 Step 9: ECS Task Definitions
 
@@ -173,14 +174,14 @@ Purpose: Defines ECS task definitions for both microservices, specifying contain
 
 bash
 Copy code
-aws cloudformation create-stack --stack-name ${PREFIX}-ecs-tasks-stack --template-body file://ecs_tasks.yaml --parameters ParameterKey=Prefix,ParameterValue=${PREFIX} ParameterKey=ClusterName,ParameterValue=${PREFIX}Cluster --capabilities CAPABILITY_NAMED_IAM
+aws cloudformation create-stack --stack-name ${PREFIX}-ecs-tasks-stack --template-body file://ecs_tasks.yaml --parameters ParameterKey=Prefix,ParameterValue=${PREFIX} ParameterKey=ClusterName,ParameterValue=${PREFIX}-Cluster --capabilities CAPABILITY_NAMED_IAM
 
 Verification:
 
 Go to the ECS Console > Task Definitions, and verify that task definitions for both microservice1 and microservice2 are created.
 Check the task definitions to ensure they include the correct environment variables and role ARNs.
 
-
+go to your LB run it in the web and see Welcome to nginx!
 
 Step 10: Deploy Microservices to ECS
 
