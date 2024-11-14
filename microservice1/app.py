@@ -1,6 +1,7 @@
 import os
 import boto3
 from flask import Flask, request, jsonify
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -29,12 +30,24 @@ def home():
 def process():
     data = request.json
     token = data.get("token")
+    email_timestream = data.get("email_timestream")
     print("SSM_PARAMETER_NAME: " + SSM_PARAMETER_NAME)
 
     # Check if the token is valid
     if token != VALID_TOKEN:
         return jsonify({"error": "Invalid token"}), 403
+    
+    # Check if the email_timestream is a valid timestamp and is not in the future
+    try:
+        email_date = datetime.fromtimestamp(int(email_timestream))
+        current_date = datetime.now()
 
+        if email_date > current_date:
+            return jsonify({"error": "The email timestamp is in the future"}), 400
+
+    except (ValueError, TypeError):
+        return jsonify({"error": "Invalid timestamp format"}), 400
+    
     # Process the data and send to SQS
     message_body = {
         "email_subject": data.get("email_subject"),
