@@ -9,6 +9,7 @@ ENV SQS_QUEUE_URL=https://sqs.il-central-1.amazonaws.com/120569624059/mySQSQueue
 # add prefix to your "${Prefix}/myapp/token" 
 ENV SSM_PARAMETER_NAME=/${PREFIX}/myapp/token 
 ENV AWS_DEFAULT_REGION=il-central-1
+ENV PREFIX=${PREFIX}
 
 # Install dependencies
 RUN pip install boto3 flask

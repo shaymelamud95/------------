@@ -7,6 +7,7 @@ app = Flask(__name__)
 # Retrieve the SQS URL and SSM parameter name from environment variables
 SQS_QUEUE_URL = os.getenv("SQS_QUEUE_URL")
 SSM_PARAMETER_NAME = os.getenv("SSM_PARAMETER_NAME")
+PREFIX = os.getenv("PREFIX")
 
 # Set up boto3 client for SSM to retrieve the token
 ssm_client = boto3.client("ssm", region_name="il-central-1")
@@ -21,7 +22,7 @@ VALID_TOKEN = get_valid_token()
 # Define the home route for health check
 @app.route("/")
 def home():
-    return "Hello, your application is running!", 200
+    return "Hello, your application is running! ${PREFIX}", 200
 
 # Define the /process route to handle POST requests
 @app.route("/process", methods=["POST"])
