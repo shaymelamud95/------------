@@ -22,7 +22,7 @@ VALID_TOKEN = get_valid_token()
 # Define the home route for health check
 @app.route("/")
 def home():
-    return "Hello, your application is running! ${PREFIX}", 200
+    return "Hello, your application is running! {PREFIX}", 200
 
 # Define the /process route to handle POST requests
 @app.route("/process", methods=["POST"])
@@ -30,7 +30,7 @@ def process():
     data = request.json
     token = data.get("token")
     print("SSM_PARAMETER_NAME: " + SSM_PARAMETER_NAME)
-    
+
     # Check if the token is valid
     if token != VALID_TOKEN:
         return jsonify({"error": "Invalid token"}), 403
