@@ -29,7 +29,8 @@ def home():
 def process():
     data = request.json
     token = data.get("token")
-
+    print("SSM_PARAMETER_NAME: " + SSM_PARAMETER_NAME)
+    
     # Check if the token is valid
     if token != VALID_TOKEN:
         return jsonify({"error": "Invalid token"}), 403
