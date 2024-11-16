@@ -203,3 +203,7 @@ curl -X POST http://t1-alb-772236224.il-central-1.elb.amazonaws.com/process -H "
     },
     "token": "test"
 }'
+
+you will see the messages in S3:
+![alt text](image.png)
+
