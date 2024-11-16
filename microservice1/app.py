@@ -54,10 +54,10 @@ def process():
     
     # Process the data and send to SQS
     message_body = {
-        "email_subject": data.get("email_subject"),
-        "email_sender": data.get("email_sender"),
-        "email_timestream": data.get("email_timestream"),
-        "email_content": data.get("email_content")
+        "email_subject": nested_data.get("email_subject"),
+        "email_sender": nested_data.get("email_sender"),
+        "email_timestream": nested_data.get("email_timestream"),
+        "email_content": nested_data.get("email_content")
     }
     try:
         # Send the message to SQS

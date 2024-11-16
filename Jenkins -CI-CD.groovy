@@ -55,11 +55,16 @@ pipeline {
                         script: "aws cloudformation list-exports --query \"Exports[?Name=='SQSQueueUrl'].Value\" --output text --region ${AWS_REGION}",
                         returnStdout: true
                     ).trim()
+                    env.S3BucketName = sh(
+                        script: "aws cloudformation list-exports --query \"Exports[?Name=='S3BucketName'].Value\" --output text --region ${AWS_REGION}",
+                        returnStdout: true
+                    ).trim()
                     
                     // Print to verify
                     println("Microservice1 ECR Repository URI: ${env.ECR_REPO1}")
                     println("Microservice2 ECR Repository URI: ${env.ECR_REPO2}")
                     println("SQS_QUEUE_URL URI: ${env.SQS_QUEUE_URL}")
+                    println("S3BucketName: ${env.S3BucketName}")
                 }
             }
         }
@@ -86,7 +91,9 @@ pipeline {
                     println("prefix : "+ prefix)
                     
                     sh '''
-                        docker build --build-arg PREFIX=${prefix} SQS_QUEUE_URL=${SQS_QUEUE_URL} -t microservice1:1.0.0 -f microservice1/Dockerfile .
+                        docker build --build-arg PREFIX=${prefix} \
+                        --build-arg SQS_QUEUE_URL=${SQS_QUEUE_URL} \
+                        -t microservice1:1.0.0 -f microservice1/Dockerfile .
                         docker tag microservice1:1.0.0 ${ECR_REPO1}:1.0.0
                         docker push ${ECR_REPO1}:1.0.0
                     '''
@@ -97,7 +104,9 @@ pipeline {
             steps {
                 script {
                     sh '''
-                        docker build -t microservice2:1.0.0 -f microservice2/Dockerfile .
+                        docker build  --build-arg SQS_QUEUE_URL=${SQS_QUEUE_URL} \
+                         --build-arg S3BucketName=${S3BucketName} \
+                        -t microservice2:1.0.0 -f microservice2/Dockerfile .
                         docker tag microservice2:1.0.0 ${ECR_REPO2}:1.0.0
                         docker push ${ECR_REPO2}:1.0.0
                     '''
