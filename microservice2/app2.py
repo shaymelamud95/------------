@@ -1,15 +1,13 @@
+import os
 import boto3
 import json
 import time
 from botocore.exceptions import ClientError
 
 # Environment variables (using your specific resources)
-QUEUE_URL = "https://sqs.il-central-1.amazonaws.com/120569624059/t2-SQSQueue"
-BUCKET_NAME = "t2-s3-bucket-120569624059"
-AWS_REGION =  "il-central-1"
-# QUEUE_URL = os.getenv("QUEUE_URL")
-# BUCKET_NAME = os.getenv("S3BucketName")
-# AWS_REGION =  os.getenv("AWS_REGION")
+QUEUE_URL = os.getenv("SQS_QUEUE_URL")
+BUCKET_NAME = os.getenv("S3BucketName")
+AWS_REGION =  os.getenv("AWS_REGION")
 
 # Initialize AWS clients
 sqs = boto3.client('sqs', region_name=AWS_REGION)

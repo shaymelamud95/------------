@@ -90,27 +90,27 @@ pipeline {
                     ).trim()
                     println("prefix : "+ prefix)
                     
-                    sh '''
-                        docker build --build-arg PREFIX=${prefix} \
-                        --build-arg SQS_QUEUE_URL=${SQS_QUEUE_URL} \
-                        -t microservice1:1.0.0 -f microservice1/Dockerfile .
+                    sh """
+                        docker build --build-arg PREFIX='${prefix}' \
+                                     --build-arg SQS_QUEUE_URL='${SQS_QUEUE_URL}' \
+                                     -t microservice1:1.0.0 -f microservice1/Dockerfile .
                         docker tag microservice1:1.0.0 ${ECR_REPO1}:1.0.0
                         docker push ${ECR_REPO1}:1.0.0
-                    '''
+                    """
                 }
             }
         }
         stage('Build, Tag, and Push Microservice 2 Image') {
             steps {
                 script {
-                    sh '''
-                        docker build  --build-arg SQS_QUEUE_URL=${SQS_QUEUE_URL} \
-                        --build-arg S3BucketName=${S3BucketName} \
-                        --build-arg AWS_REGION=${AWS_REGION} \
-                        -t microservice2:1.0.0 -f microservice2/Dockerfile .
+                    sh """
+                        docker build --build-arg SQS_QUEUE_URL='${SQS_QUEUE_URL}' \
+                                     --build-arg S3BucketName='${S3BucketName}' \
+                                     --build-arg AWS_REGION='${AWS_REGION}' \
+                                     -t microservice2:1.0.0 -f microservice2/Dockerfile .
                         docker tag microservice2:1.0.0 ${ECR_REPO2}:1.0.0
                         docker push ${ECR_REPO2}:1.0.0
-                    '''
+                    """
                 }
             }
         }
