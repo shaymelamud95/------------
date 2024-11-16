@@ -3,15 +3,16 @@ import json
 import time
 from botocore.exceptions import ClientError
 
-# Initialize AWS clients
-sqs = boto3.client('sqs', region_name='il-central-1')
-s3 = boto3.client('s3', region_name='il-central-1')
-
 # # Environment variables (using your specific resources)
-QUEUE_URL = "https://sqs.il-central-1.amazonaws.com/120569624059/t2-SQSQueue"
-BUCKET_NAME = "t2-s3-bucket-120569624059"
-# QUEUE_URL = os.getenv("QUEUE_URL")
-# BUCKET_NAME = os.getenv("BUCKET_NAME")
+# QUEUE_URL = "https://sqs.il-central-1.amazonaws.com/120569624059/t2-SQSQueue"
+# BUCKET_NAME = "t2-s3-bucket-120569624059"
+QUEUE_URL = os.getenv("QUEUE_URL")
+BUCKET_NAME = os.getenv("S3BucketName")
+AWS_REGION =  os.getenv("AWS_REGION")
+
+# Initialize AWS clients
+sqs = boto3.client('sqs', region_name=AWS_REGION)
+s3 = boto3.client('s3', region_name=AWS_REGION)
 
 def poll_sqs():
     try:
