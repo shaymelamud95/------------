@@ -2,9 +2,9 @@
 FROM python:3.9-slim
 
 # Set environment variables
-ENV QUEUE_URL=https://sqs.il-central-1.amazonaws.com/120569624059/mySQSQueue
-ENV BUCKET_NAME=my-s3-bucket-120569624059
-ENV AWS_DEFAULT_REGION=il-central-1
+ENV QUEUE_URL="https://sqs.il-central-1.amazonaws.com/120569624059/t2-SQSQueue"
+ENV BUCKET_NAME="t2-s3-bucket-120569624059"
+ENV AWS_DEFAULT_REGION="il-central-1"
 
 # Create a directory for the application
 WORKDIR /app
