@@ -6,12 +6,13 @@ from datetime import datetime
 app = Flask(__name__)
 
 # Retrieve the SQS URL and SSM parameter name from environment variables
-SQS_QUEUE_URL = os.getenv("SQS_QUEUE_URL")
-# SQS_QUEUE_URL = "https://sqs.il-central-1.amazonaws.com/120569624059/t2-SQSQueue"
-SSM_PARAMETER_NAME = os.getenv("SSM_PARAMETER_NAME")
-# SSM_PARAMETER_NAME = "/t2/myapp/token"
-PREFIX = os.getenv("PREFIX")
-# PREFIX = "t2"
+test = os.getenv("SQS_QUEUE_URL")
+SQS_QUEUE_URL = "https://sqs.il-central-1.amazonaws.com/120569624059/t2-SQSQueue"
+test2 = os.getenv("SSM_PARAMETER_NAME")
+SSM_PARAMETER_NAME = "/t2/myapp/token"
+# PREFIX = os.getenv("PREFIX")
+test3 = os.getenv("PREFIX")
+PREFIX = "t2"
 
 # Set up boto3 client for SSM to retrieve the token
 ssm_client = boto3.client("ssm", region_name="il-central-1")
@@ -58,9 +59,9 @@ def process():
         "email_sender": nested_data.get("email_sender"),
         "email_timestream": nested_data.get("email_timestream"),
         "email_content": nested_data.get("email_content"),
-        "SQS_QUEUE_URL": SQS_QUEUE_URL,
-        "SSM_PARAMETER_NAME": SSM_PARAMETER_NAME,
-        "PREFIX": PREFIX
+        "SQS_QUEUE_URL": test,
+        "SSM_PARAMETER_NAME": test2,
+        "PREFIX": test3
 
     }
     try:
