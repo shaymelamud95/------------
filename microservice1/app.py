@@ -33,7 +33,8 @@ def home():
 def process():
     data = request.json
     token = data.get("token")
-    email_timestream = data.get("email_timestream")
+    nested_data = data.get("data", data)
+    email_timestream = nested_data.get("email_timestream")
     print("SSM_PARAMETER_NAME: " + SSM_PARAMETER_NAME)
 
     # Check if the token is valid
