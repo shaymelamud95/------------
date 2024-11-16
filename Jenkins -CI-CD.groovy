@@ -3,7 +3,7 @@ pipeline {
     environment {
         AWS_REGION = 'il-central-1' // set up to your region
         REPO_URL = 'https://github.com/shaymelamud95/CHECKMARKS-HM.git'
-        ECR_REGISTRY = '' // set up to your ECR_REGISTRY
+        ECR_REGISTRY = '' // set up to your ECR_REGISTRY for exaple: <NUMBER>.dkr.ecr.<REGION>.amazonaws.com
     }
     stages {
         stage('AWS Credentials') {
@@ -51,10 +51,15 @@ pipeline {
                         script: "aws cloudformation list-exports --query \"Exports[?Name=='Microservice2ECRRepository'].Value\" --output text --region ${AWS_REGION}",
                         returnStdout: true
                     ).trim()
+                    env.SQS_QUEUE_URL = sh(
+                        script: "aws cloudformation list-exports --query \"Exports[?Name=='SQSQueueUrl'].Value\" --output text --region ${AWS_REGION}",
+                        returnStdout: true
+                    ).trim()
                     
                     // Print to verify
                     println("Microservice1 ECR Repository URI: ${env.ECR_REPO1}")
                     println("Microservice2 ECR Repository URI: ${env.ECR_REPO2}")
+                    println("SQS_QUEUE_URL URI: ${env.SQS_QUEUE_URL}")
                 }
             }
         }
@@ -81,7 +86,7 @@ pipeline {
                     println("prefix : "+ prefix)
                     
                     sh '''
-                        docker build --build-arg PREFIX=${prefix} -t microservice1:1.0.0 -f microservice1/Dockerfile .
+                        docker build --build-arg PREFIX=${prefix} SQS_QUEUE_URL=${SQS_QUEUE_URL} -t microservice1:1.0.0 -f microservice1/Dockerfile .
                         docker tag microservice1:1.0.0 ${ECR_REPO1}:1.0.0
                         docker push ${ECR_REPO1}:1.0.0
                     '''

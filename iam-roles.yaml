@@ -45,9 +45,9 @@ Resources:
                   - ssmmessages:CreateDataChannel
                   - ssmmessages:OpenControlChannel
                   - ssmmessages:OpenDataChannel
-                Resource:
-                  - !ImportValue S3BucketArn   # Full ARN of the S3 bucket
-                  - !ImportValue SQSQueueArn   # Full ARN of the SQS queue
+                Resource: "*"
+                  # - !ImportValue S3BucketArn   # Full ARN of the S3 bucket
+                  # - !ImportValue SQSQueueArn   # Full ARN of the SQS queue
   # ECS Task Role for the application
   myECSTaskRole:
     Type: AWS::IAM::Role

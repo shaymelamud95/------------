@@ -47,7 +47,8 @@ Execution:
 
 
 
-aws cloudformation create-stack --stack-name ${PREFIX}-parameter-store-stack --template-body file://parameter-store.yaml --parameters ParameterKey=MySecretToken,ParameterValue=<your_secret_token_value> --capabilities CAPABILITY_NAMED_IAM
+aws cloudformation create-stack --stack-name ${PREFIX}-parameter-store-stack --template-body file://parameter-store.yaml --parameters ParameterKey=MySecretToken,ParameterValue=<your_secret_token_value> ParameterKey=Prefix,ParameterValue=${PREFIX}  --capabilities CAPABILITY_NAMED_IAM
+
 Replace <your_secret_token_value> with the actual secret token you want to store.
 
 Verification:
@@ -70,6 +71,7 @@ Verification:
 Go to the IAM Console and verify that the user with required permissions has been created.
 
 Note: Retrieve the Access Key and Secret Key if needed for local development.
+
 Step 3: S3 and SQS Setup
 
 Template: storage_and_queue.yaml
@@ -176,6 +178,11 @@ paste the code from jenkins-CI-CD.geouvy:
 1. set up to your region
 2. set up to your ECR_REGISTRY
 3. create credentials with the AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY	
+
+if there issu try:
+sudo systemctl restart jenkins
+in your jenkins-ec2
+
 you can see then in ssm parameter store or in the output template param list (not recomended just for easy access and testing)
 
 run the pipeline and check that new revition in task deff.

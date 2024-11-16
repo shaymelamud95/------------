@@ -27,6 +27,15 @@ Resources:
                   - ecr:InitiateLayerUpload
                   - ecr:ListImages
                   - ecr:DescribeImages
+                  - ecr:GetAuthorizationToken
+                  - ecr:BatchCheckLayerAvailability
+                  - ecr:BatchGetImage
+                  - ecr:GetDownloadUrlForLayer
+                  - ecr:PutImage
+                  - ecs:RegisterTaskDefinition
+                  - ecs:UpdateService
+                  - ecs:DescribeTaskDefinition
+                  - iam:PassRole 
                 Resource: "*"
         - PolicyName: "ECSAccessPolicy"
           PolicyDocument:

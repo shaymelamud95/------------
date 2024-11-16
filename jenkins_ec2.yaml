@@ -71,6 +71,9 @@ Resources:
           usermod -aG docker jenkins
           usermod -aG docker ubuntu
 
+          # Restart Jenkins after adding user to docker group
+          systemctl restart jenkins
+
           # Install Unzip (required for AWS CLI installation)
           apt-get install -y unzip
 
