@@ -6,7 +6,7 @@ from datetime import datetime
 app = Flask(__name__)
 
 # Retrieve the SQS URL and SSM parameter name from environment variables
-# SQS_QUEUE_URL = os.getenv("SQS_QUEUE_URL")
+test = os.getenv("SQS_QUEUE_URL")
 SQS_QUEUE_URL = "https://sqs.il-central-1.amazonaws.com/120569624059/t2-SQSQueue"
 # SSM_PARAMETER_NAME = os.getenv("SSM_PARAMETER_NAME")
 SSM_PARAMETER_NAME = "/t2/myapp/token"
@@ -57,7 +57,8 @@ def process():
         "email_subject": nested_data.get("email_subject"),
         "email_sender": nested_data.get("email_sender"),
         "email_timestream": nested_data.get("email_timestream"),
-        "email_content": nested_data.get("email_content")
+        "email_content": nested_data.get("email_content"),
+        "test": test
     }
     try:
         # Send the message to SQS
